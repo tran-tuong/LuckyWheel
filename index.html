@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISTECH LUCKY MAJOR</title>
+    <link rel="stylesheet" href="css/typo/typo.css" />
+    <link rel="stylesheet" href="css/hc-canvas-luckwheel.css" />
+    <style>
+      .hc-luckywheel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -250px;
+        margin-left: -250px;
+      }
+    </style>
+  </head>
+  <body class="bg">
+    <div class="logo">
+      <div class="logo-truong">
+        <img src="./images/Logo VIET.png" alt="" />
+      </div>
+      <div class="logo-istech">
+        <img src="./images/istech logo black transparent.png" alt="" />
+      </div>
+    </div>
+    <div class="wrapper typo" id="wrapper">
+      <section id="luckywheel" class="hc-luckywheel">
+        <div class="hc-luckywheel-container">
+          <canvas class="hc-luckywheel-canvas" width="500px" height="500px"
+            >Vòng Xoay May Mắn</canvas
+          >
+        </div>
+        <a class="hc-luckywheel-btn" href="javascript:;">Xoay</a>
+      </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="js/hc-canvas-luckwheel.js"></script>
+    <script>
+      var isPercentage = true;
+      var prizes = [
+        {
+          text: "Tự Động Hóa Và Tin Học (AAI)",
+          img: "images/AAI.png",
+          number: 1, // 1%,
+          percentpage: 0.7144, // 1%
+        },
+        {
+          text: "Kế Toán Phân Tích Và Kiểm Toán (AC)",
+          img: "images/AC.png",
+          number: 1,
+          percentpage: 0.7144, // 5%
+        },
+        {
+          text: "Công Nghê Thông Tin Ứng Dụng (AIT)",
+          img: "images/AIT.png",
+          number: 1,
+          percentpage: 0.07144, // 10%
+        },
+        {
+          text: "Phân Tích Dữ Liệu Kinh Doanh (BDA)",
+          img: "images/BDA.png",
+          number: 1,
+          percentpage: 0.07144, // 24%
+        },
+        {
+          text: "Ngôn Ngữ Anh (BEL)",
+          img: "images/BEL.png",
+          number: 1,
+          percentpage: 0.07144, // 60%
+        },
+        {
+          text: "Quản lý (song bằng BSM)",
+          img: "images/BSM.png",
+          number: 1, // 1%,
+          percentpage: 0.07144, // 1%
+        },
+        {
+          text: "Công nghệ tài chính và Kinh doanh số (FDB)",
+          img: "images/FDB.png",
+          number: 1,
+          percentpage: 0.07144, // 5%
+        },
+        {
+          text: "Kinh doanh Quốc tế (IB)",
+          img: "images/IB.png",
+          number: 1,
+          percentpage: 0.07144, // 0.7144%
+        },
+        {
+          text: "Tin học và kĩ thuật máy tính (ICE)",
+          img: "images/ICE.png",
+          number: 1,
+          percentpage: 0.07144, // 24%
+        },
+        {
+          text: "Kỹ thuật hệ thống công nghiệp và Logistics (ISE)",
+          img: "images/ISE.png",
+          number: 1,
+          percentpage: 0.07144, // 60%
+        },
+        {
+          text: "Marketing (Song bằng)",
+          img: "images/Marketing.png",
+          number: 1, // 1%,
+          percentpage: 0.05, // 1%
+        },
+        {
+          text: "Hệ thống thông tin và quản lý (MIS)",
+          img: "images/MIS.png",
+          number: 1,
+          percentpage: 0.05, // 5%
+        },
+        {
+          text: "Quản lý khách sạn thể thao và du lịch (Troy)",
+          img: "images/Troy.png",
+          number: 1,
+          percentpage: 0.05, // 9%
+        },
+        {
+          text: "Kế toán và tài chính (UEL)",
+          img: "images/UEL.png",
+          number: 1,
+          percentpage: 0.05, // 24%
+        },
+      ];
+      document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+          hcLuckywheel.init({
+            id: "luckywheel",
+            config: function (callback) {
+              callback && callback(prizes);
+            },
+            mode: "both",
+            getPrize: function (callback) {
+              var rand = randomIndex(prizes);
+              var chances = rand;
+              callback && callback([rand, chances]);
+            },
+            gotBack: function (data) {
+              Swal.fire("Chúc mừng bạn đến với", data, "success");
+            },
+          });
+        },
+        false
+      );
+      function randomIndex(prizes) {
+        const prizesAfterFilter = prizes.filter((el) => el.number != 0);
+        if (isPercentage) {
+          var counter = 1;
+          for (let i = 0; i < prizes.length; i++) {
+            if (prizes[i].number == 0) {
+              counter++;
+            }
+          }
+          if (counter == prizes.length) {
+            return null;
+          }
+          let rand = Math.random();
+          let prizeIndex = 0;
+
+          for (let i = prizesAfterFilter.length - 1; i >= 0; i--) {
+            let totalPercentage = 0;
+            for (let j = i; j >= 0; j--) {
+              totalPercentage += prizesAfterFilter[j].percentpage;
+              if (rand < totalPercentage) {
+                prizeIndex = prizesAfterFilter.length - 1 - i;
+              }
+            }
+          }
+
+          if (prizesAfterFilter[prizeIndex].number != 0) {
+            counter++;
+            prizesAfterFilter[prizeIndex].number =
+              prizesAfterFilter[prizeIndex].number - 1;
+
+            return prizeIndex;
+          } else {
+            return randomIndex(prizesAfterFilter);
+          }
+        } else {
+          var counter = 0;
+          for (let i = 0; i < prizes.length; i++) {
+            if (prizes[i].number == 0) {
+              counter++;
+            }
+          }
+          if (counter == prizes.length) {
+            return null;
+          }
+          var rand = (Math.random() * prizes.length) >>> 0;
+          if (prizes[rand].number != 0) {
+            prizes[rand].number = prizes[rand].number - 1;
+            return rand;
+          } else {
+            return randomIndex(prizes);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
